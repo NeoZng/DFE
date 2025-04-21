@@ -5,21 +5,6 @@ import math
 import numpy as np
 
 
-def pair_id_to_image_ids(pair_id):
-    """Get image ids from pair id. (Taken from colmap)
-
-    Args:
-        pair_id (int): image pair id
-
-    Returns:
-        tuple: id of first image, id of second image
-    """
-    image_id2 = pair_id % 2147483647
-    image_id1 = (pair_id - image_id2) / 2147483647
-
-    return int(image_id1), int(image_id2)
-
-
 def get_cam(img, cams):
     """Get camera data.
 
@@ -40,32 +25,6 @@ def get_cam(img, cams):
     K[1, 2] = params[3]
 
     return K
-
-
-def compose_fundamental_matrix(K1, T1, K2, T2):
-    """Compose fundamental matrix.
-
-    Args:
-        K1 (array): intrinsic of 1st camera
-        T1 (array): extrinsic of 1st camera
-        K2 (array): intrinsic of 2nd camera
-        T2 (array): extrinsic of 2nd camera
-
-    Returns:
-        array: fundamental matrix
-    """
-    T12 = T2 @ np.linalg.inv(T1)
-
-    R = T12[:3, :3]
-    t = T12[:3, 3]
-
-    A = np.dot(np.dot(K1, R.T), t)
-    C = vector_to_cross(A)
-
-    F = np.linalg.inv(K2).T @ R @ K1.T @ C
-
-    return F
-
 
 def quaterion_to_rotation_matrix(quaternion):
     """Get rotation matrix from quaternion.

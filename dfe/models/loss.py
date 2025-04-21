@@ -27,7 +27,6 @@ def symmetric_epipolar_distance(pts1, pts2, fundamental_mat):
     return ret
 
 
-# def robust_symmetric_epipolar_distance(pts1, pts2, fundamental_mat, gamma=1.0):
 def robust_symmetric_epipolar_distance(pts1, pts2, fundamental_mat, gamma=0.5):
     """Robust symmetric epipolar distance.
 

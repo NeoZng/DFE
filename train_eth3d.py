@@ -10,11 +10,12 @@ Example:
 
 import argparse
 import time
+import os
 
 import torch
 import torch.optim as optim
 
-from dfe.datasets import ColmapDataset
+from dfe.datasets import Eth3dDataset
 from dfe.models import NormalizedEightPointNet
 import dfe.models.loss as L
 
@@ -36,7 +37,12 @@ def train(options):
     data_sets = []
     for dset_path in options.dataset:
         print('Loading dataset "%s"' % dset_path)
-        data_sets.append(ColmapDataset(dset_path, num_points=1000))
+        data_sets.append(Eth3dDataset(
+            dset_path, 
+            num_points=1000,
+            compute_virtual_points=True,
+            mode="train"  # Set mode to "train"
+        ))
         print("Number of pairs: %d" % len(data_sets[-1]))
 
     dset = torch.utils.data.ConcatDataset(data_sets)
@@ -167,14 +173,27 @@ if __name__ == "__main__":
         "--side_info_size", type=int, default=3, help="size of side information"
     )
     PARSER.add_argument(
-        "--dataset", default=["Family"], nargs="+", help="list of datasets"
+        "--dataset", default=["/home/neo/Epipolar_evaluation/dataset/terrace"
+                             ,"/home/neo/Epipolar_evaluation/dataset/relief"
+                             ,"/home/neo/Epipolar_evaluation/dataset/living_room"
+                             ,"/home/neo/Epipolar_evaluation/dataset/playground"
+                             ,"/home/neo/Epipolar_evaluation/dataset/terrains"
+                             ,"/home/neo/Epipolar_evaluation/dataset/delivery_area"
+                             ,"/home/neo/Epipolar_evaluation/dataset/facade"
+                             ,"/home/neo/Epipolar_evaluation/dataset/meadow"
+                             ,"/home/neo/Epipolar_evaluation/dataset/electro"
+                             ,"/home/neo/Epipolar_evaluation/dataset/office"
+                             ,"/home/neo/Epipolar_evaluation/dataset/kicker"
+                             ,"/home/neo/Epipolar_evaluation/dataset/relief_2"
+                             ,"/home/neo/Epipolar_evaluation/dataset/pipes"
+                             ,"/home/neo/Epipolar_evaluation/dataset/courtyard"], nargs="+", help="list of datasets"
     )
-    PARSER.add_argument("--output", type=str, default="output.pt", help="output file")
+    PARSER.add_argument("--output", type=str, default="eth3d.pt", help="output file")
     PARSER.add_argument("--num_epochs", type=int, default=200, help="number of epochs")
     PARSER.add_argument("--batch_size", type=int, default=16, help="batch size")
     PARSER.add_argument("--num_workers", type=int, default=8, help="number of workers")
     PARSER.add_argument(
-        "--checkpoint_interval", type=int, default=1, help="checkpoint interval"
+        "--checkpoint_interval", type=int, default=10, help="checkpoint interval"
     )
     PARSER.add_argument(
         "--learning_rate", type=float, default=1e-3, help="learning rate"

@@ -33,98 +33,6 @@ class FundamentalMatrixDataset(Dataset):
         self.pts1_grid = []
         self.pts2_grid = []
 
-    def write_point_cache(self, index):
-        """Helper method for parallel virtual point computation.
-
-        Args:
-            index (int): sample index
-
-        Returns:
-            int: index
-        """
-        pts1_virt, pts2_virt = self.compute_virtual_points(index)
-
-        self.pts1_virt[index] = pts1_virt
-        self.pts2_virt[index] = pts2_virt
-
-        return index
-
-    def compute_virtual_points(self, index):
-        """Compute virtual points for a single sample.
-
-        Args:
-            index (int): sample index
-
-        Returns:
-            tuple: virtual points in first image, virtual points in second image
-        """
-        pts2_virt, pts1_virt = cv2.correctMatches(
-            self.F[index], self.pts2_grid[index], self.pts1_grid[index]
-        )
-
-        valid_1 = np.logical_and(
-            np.logical_not(np.isnan(pts1_virt[:, :, 0])),
-            np.logical_not(np.isnan(pts1_virt[:, :, 1])),
-        )
-        valid_2 = np.logical_and(
-            np.logical_not(np.isnan(pts2_virt[:, :, 0])),
-            np.logical_not(np.isnan(pts2_virt[:, :, 1])),
-        )
-
-        _, valid_idx = np.where(np.logical_and(valid_1, valid_2))
-        good_pts = len(valid_idx)
-
-        while good_pts < self.num_points_eval:
-            valid_idx = np.hstack(
-                (valid_idx, valid_idx[: (self.num_points_eval - good_pts)])
-            )
-            good_pts = len(valid_idx)
-
-        valid_idx = valid_idx[: self.num_points_eval]
-
-        pts1_virt = pts1_virt[:, valid_idx]
-        pts2_virt = pts2_virt[:, valid_idx]
-
-        ones = np.ones((pts1_virt.shape[1], 1))
-
-        pts1_virt = np.hstack((pts1_virt[0], ones))
-        pts2_virt = np.hstack((pts2_virt[0], ones))
-
-        return pts1_virt, pts2_virt
-
-    def compute_virtual_points_all(self):
-        """Compute virtual points for all samples.
-        """
-        # set grid points for each image
-        grid_x, grid_y = np.meshgrid(
-            np.arange(0, 1, self.step), np.arange(0, 1, self.step)
-        )
-        self.num_points_eval = len(grid_x.flatten())
-
-        for size_1, size_2 in zip(self.size_1, self.size_2):
-            pts1_grid = np.float32(
-                np.vstack(
-                    (size_1[0] * grid_x.flatten(), size_1[1] * grid_y.flatten())
-                ).T
-            )
-            pts2_grid = np.float32(
-                np.vstack(
-                    (size_2[0] * grid_x.flatten(), size_2[1] * grid_y.flatten())
-                ).T
-            )
-
-            self.pts1_grid.append(pts1_grid[np.newaxis, :, :])
-            self.pts2_grid.append(pts2_grid[np.newaxis, :, :])
-
-        # make grid points fit to epipolar constraint
-        self.pts1_virt = [None] * len(self.F)
-        self.pts2_virt = [None] * len(self.F)
-
-        pool = ThreadPool(processes=cpu_count())
-
-        pool.map(self.write_point_cache, range(len(self.F)))
-
-        return
 
     def __getitem__(self, index):
         """Get dataset sample.
@@ -137,8 +45,6 @@ class FundamentalMatrixDataset(Dataset):
         """
         pts = self.pts[index]
         F = self.F[index]
-        pts1_virt = self.pts1_virt[index]
-        pts2_virt = self.pts2_virt[index]
 
         # print(self.img_paths[index])
 
@@ -163,7 +69,7 @@ class FundamentalMatrixDataset(Dataset):
             pts = pts[idx, :]
             side_info = side_info[idx]
 
-        return (np.float32(pts[:, :4]), side_info, np.float32(F), pts1_virt, pts2_virt)
+        return (np.float32(pts[:, :4]), side_info, np.float32(F))
 
     def __len__(self):
         """Get length of dataset.

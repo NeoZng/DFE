@@ -222,7 +222,6 @@ def qvec2rotmat(qvec):
     )
     
 
-
 def rotmat2qvec(R):
     Rxx, Ryx, Rzx, Rxy, Ryy, Rzy, Rxz, Ryz, Rzz = R.flat
     K = (
