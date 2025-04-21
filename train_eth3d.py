@@ -188,7 +188,7 @@ if __name__ == "__main__":
                              ,"/home/neo/Epipolar_evaluation/dataset/pipes"
                              ,"/home/neo/Epipolar_evaluation/dataset/courtyard"], nargs="+", help="list of datasets"
     )
-    PARSER.add_argument("--output", type=str, default="eth3d.pt", help="output file")
+    PARSER.add_argument("--output", type=str, default="model/eth3d.pt", help="output file")
     PARSER.add_argument("--num_epochs", type=int, default=200, help="number of epochs")
     PARSER.add_argument("--batch_size", type=int, default=16, help="batch size")
     PARSER.add_argument("--num_workers", type=int, default=8, help="number of workers")

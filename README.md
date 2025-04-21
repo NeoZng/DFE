@@ -1,3 +1,15 @@
+# DFE training on ETH3d and KITTI odom dataset
+
+This is a submodule of Epipolar Evaluation.
+
+To use the repo, download ETH3d and KITTI odom dataset and place them in the `dataset` folder.  
+
+The repo has been tested on Ubuntu 22.04 with miniconda.
+
+The environment.yml file has been updated to support Python3 (PyTorch does not support Python2 anymore).
+
+---
+
 # DISCONTINUATION OF PROJECT #  
 This project will no longer be maintained by Intel.  
 Intel has ceased development and contributions including, but not limited to, maintenance, bug fixes, new releases, or updates, to this project.  

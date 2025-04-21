@@ -180,7 +180,7 @@ if __name__ == "__main__":
                               "/home/neo/Epipolar_evaluation/dataset/04",
                               "/home/neo/Epipolar_evaluation/dataset/05"], nargs="+", help="list of datasets"
     )
-    PARSER.add_argument("--output", type=str, default="kitti.pt", help="output file")
+    PARSER.add_argument("--output", type=str, default="model/kitti.pt", help="output file")
     PARSER.add_argument("--num_epochs", type=int, default=200, help="number of epochs")
     PARSER.add_argument("--batch_size", type=int, default=16, help="batch size")
     PARSER.add_argument("--num_workers", type=int, default=8, help="number of workers")

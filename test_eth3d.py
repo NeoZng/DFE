@@ -206,7 +206,7 @@ if __name__ == "__main__":
                            ,"/home/neo/Epipolar_evaluation/dataset/terrace_2"], nargs="+", help="list of datasets"
     )
     PARSER.add_argument("--num_workers", type=int, default=1, help="number of workers")
-    PARSER.add_argument("--model", type=str, default="/home/neo/Epipolar_evaluation/dl/DFE/models/tanksandtemples_model.pt", help="model file")
+    PARSER.add_argument("--model", type=str, default="/home/neo/Epipolar_evaluation/dl/DFE/models/eth3d.pt", help="model file")
 
     ARGS = PARSER.parse_args()
 
