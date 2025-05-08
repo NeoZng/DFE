@@ -6,11 +6,10 @@ import os
 import cv2
 from tqdm import tqdm
 
-from dfe.datasets import FundamentalMatrixDataset
 from dfe.utils import colmap_read, colmap_utils
 
 
-class ETH3D(FundamentalMatrixDataset):
+class ETH3D():
     """Colmap dataset for fundametal matrix estimation. Derived from FundamentalMatrixDataset.
     """
 
@@ -36,9 +35,7 @@ class ETH3D(FundamentalMatrixDataset):
             min_matches (int, optional): minimal number of good matches per sample. Defaults to 20.
             compute_virtual_points (bool, optional): whether to compute virtual points. Defaults to True.
             mode (str, optional): "train" or "test" mode. Defaults to "test".
-        """
-        super(ETH3D, self).__init__(num_points)
-        
+        """        
         self.mode = mode
         self.compute_virtual_points = compute_virtual_points
         
